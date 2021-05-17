@@ -1,7 +1,42 @@
 import React, { useRef, useState } from 'react';
-import { Form, Button, Card, Alert } from 'react-bootstrap';
+import { Button, Card, TextField } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
+import { makeStyles } from '@material-ui/core/styles';
 import { Link } from "react-router-dom";
 import { useAuth } from '../contexts/AuthContext';
+
+const useStyles = makeStyles({
+	card: {
+		padding: 20,
+		marginTop: 20,
+		marginBottom: 20,
+	},
+	boxVerticalCenter: {
+		display: 'flex',
+		flexDirection: 'column',
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	boxHorizontalCenter: {
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	title: {
+		textAlign: 'center',
+		fontSize: 24,
+		marginBottom: 20,
+	},
+	textField: {
+		marginTop: 10,
+		marginBottom: 10,
+	},
+	button: {
+		marginTop: 10,
+		marginBottom: 10,
+	},
+});
 
 export default function ForgotPassword() {
 	const emailRef = useRef();
@@ -9,6 +44,7 @@ export default function ForgotPassword() {
 	const [error, setError] = useState('');
 	const [message, setMessage] = useState('');
 	const [loading, setLoading] = useState(false);
+	const classes = useStyles();
 
 	async function handleSubmit(e) {
 		e.preventDefault();
@@ -28,21 +64,37 @@ export default function ForgotPassword() {
 
 	return (
 		<>
-			<Card>
-				<Card.Body>
-					<h2 className="text-center mb-4">Reset Password</h2>
-					{error && <Alert variant="danger">{error}</Alert>}
-					{message && <Alert variant="success">{message}</Alert>}
-					<Form onSubmit={handleSubmit}>
-						<Form.Group id="email" className="mb-3">
-							<Form.Label>Email</Form.Label>
-							<Form.Control type="email" ref={emailRef} placeholder="Enter email" required />
-						</Form.Group>
-						<Button disabled={loading} className="w-100" type="submit">Reset Password</Button>
-					</Form>
-				</Card.Body>
+			<Card className={classes.card}>
+				<div className={classes.boxVerticalCenter}>
+					<h1 className={classes.title}>Reset Password</h1>
+				</div>
+				{error && <Alert severity="error">{error}</Alert>}
+				{message && <Alert severity="success">{message}</Alert>}
+				<form noValidate autoComplete="off" onSubmit={handleSubmit}>
+					<TextField
+						id="email"
+						label="Email Address"
+						type="email"
+						autoComplete="email-address"
+						variant="outlined"
+						className={classes.textField}
+						inputRef={emailRef}
+						fullWidth
+						required
+					/>
+					<Button
+						className={classes.button}
+						variant="contained"
+						color="primary"
+						disabled={loading}
+						type="submit"
+						fullWidth
+					>
+						Reset Password
+					</Button>
+				</form>
 			</Card>
-			<div className="w-100 text-center mt-2">
+			<div className={classes.boxHorizontalCenter}>
 				<Link to="/login">Log in instead</Link>
 			</div>
 		</>
